@@ -24,7 +24,7 @@ public class UrlShortener {
         generator = "url_sequence"
     )
     private Long id;
-    private String shortCode;
+    String shortCode;
     private String originalUrl;
     private LocalDate createdAt;
 
