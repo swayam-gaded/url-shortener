@@ -16,6 +16,11 @@ public class UrlService {
         this.urlRepo = urlRepo;
     }
 
+    public String getOriginalUrl(String shortCode) {
+        Optional<UrlShortener> urlOptional = urlRepo.findByShortCode(shortCode);
+        UrlShortener url = urlOptional.get();
+        return url.getOriginalUrl();
+    }
     public String shortCodeGenerator() {
         StringBuilder shortUrl = new StringBuilder();
         for(int i=0;i<5;i++) {
@@ -46,6 +51,10 @@ public class UrlService {
     }
 
     public void addNew(UrlShortener urlShortener) {
+        Optional<UrlShortener> urlOptional = urlRepo.findByOriginalUrl(urlShortener.getOriginalUrl());
+        if(urlOptional.isPresent()) {
+            throw new IllegalStateException("Shortened Url Exists Already");
+        }
         String shortCode = shortCodeGenerator();
         while (existShortCode(shortCode)) {
             shortCode = shortCodeGenerator();

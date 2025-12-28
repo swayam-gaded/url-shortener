@@ -25,11 +25,10 @@ public class UrlShortener {
     )
     private Long id;
     String shortCode;
-    private String originalUrl;
+    String originalUrl;
     private LocalDate createdAt;
 
-    public UrlShortener(String shortCode,String originalUrl) {
-        this.shortCode = shortCode;
+    public UrlShortener(String originalUrl) {
         this.originalUrl = originalUrl;
     }
 
