@@ -1,5 +1,6 @@
 package com.darklord.url_shortener.url;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,13 @@ public class UrlService {
         while (existShortCode(shortCode)) {
             shortCode = shortCodeGenerator();
         }
-        urlShortener.shortCode = shortCode;
+        System.out.println(shortCode);
+        urlShortener.setShortCode(shortCode);
+        System.out.println(urlShortener);
         urlRepo.save(urlShortener);
+    }
+
+    public List<UrlShortener> displayOutput() {
+        return urlRepo.findAll();
     }
 }

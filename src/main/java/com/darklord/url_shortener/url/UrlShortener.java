@@ -1,6 +1,5 @@
 package com.darklord.url_shortener.url;
 
-import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,13 +23,16 @@ public class UrlShortener {
         generator = "url_sequence"
     )
     private Long id;
-    String shortCode;
-    String originalUrl;
-    private LocalDate createdAt;
+    private String shortCode;
+    private String originalUrl;
 
     public UrlShortener(String originalUrl) {
         this.originalUrl = originalUrl;
     }
+    
+    public UrlShortener() {
+    }
+
 
     public Long getId() {
         return id;
@@ -56,21 +58,12 @@ public class UrlShortener {
         this.originalUrl = originalUrl;
     }
 
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
     @Override
     public String toString() {
         return  "UrlShortener {" +
                 "id: "+id +
                 "shortCode: "+shortCode +
                 "originalUrl: "+originalUrl+
-                "created at: "+createdAt + 
                 "}";
     }
 }

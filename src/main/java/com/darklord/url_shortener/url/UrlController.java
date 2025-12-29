@@ -1,6 +1,7 @@
 package com.darklord.url_shortener.url;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,13 @@ public class UrlController {
         this.urlService = urlService;
     }
 
+    
+    @GetMapping 
+    public List<UrlShortener> display() {
+        System.out.println("DISPLAY ENDPOINT HIT");
+        return urlService.displayOutput();
+    }
+
     @GetMapping(path = "{shortCode}")
     public ResponseEntity<Void> redirectToOriginal(@PathVariable String shortCode) {
         String originalUrl = urlService.getOriginalUrl(shortCode);
@@ -37,4 +45,5 @@ public class UrlController {
     public void addNewUrl(@RequestBody UrlShortener urlShortener) {
         urlService.addNew(urlShortener);
     }
+
 }
