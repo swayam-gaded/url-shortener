@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.darklord.url_shortener.repository.UrlRepo;
 import com.darklord.url_shortener.model.UrlShortener;
+import com.darklord.url_shortener.util.Base62Util;
 
 
 @Service
@@ -59,14 +60,13 @@ public class UrlService {
         if(urlOptional.isPresent()) {
             throw new IllegalStateException("Shortened Url Exists Already");
         }
-        String shortCode = shortCodeGenerator();
-        while (existShortCode(shortCode)) {
-            shortCode = shortCodeGenerator();
-        }
-        System.out.println(shortCode);
-        urlShortener.setShortCode(shortCode);
-        System.out.println(urlShortener);
+
         urlRepo.save(urlShortener);
+        Long id = urlShortener.getId();
+        String shortCode = Base62Util.encode(id);
+        urlShortener.setShortCode(shortCode);
+        urlRepo.save(urlShortener);
+        
     }
 
     public List<UrlShortener> displayOutput() {
