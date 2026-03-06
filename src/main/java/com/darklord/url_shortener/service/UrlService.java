@@ -1,12 +1,13 @@
 package com.darklord.url_shortener.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.darklord.url_shortener.repository.UrlRepo;
+import com.darklord.url_shortener.dto.UrlRequest;
+import com.darklord.url_shortener.dto.UrlResponse;
 import com.darklord.url_shortener.model.UrlShortener;
 import com.darklord.url_shortener.util.Base62Util;
 
@@ -22,26 +23,30 @@ public class UrlService {
     }
 
     public String getOriginalUrl(String shortCode) {
-        Optional<UrlShortener> urlOptional = urlRepo.findByShortCode(shortCode);
-        UrlShortener url = urlOptional.get();
-        return url.getOriginalUrl();
+        return urlRepo.findByShortCode(shortCode)
+            .map(UrlShortener::getOriginalUrl)
+            .orElseThrow(() -> new RuntimeException("URL not found for code: " + shortCode));
     }
 
-    public void addNew(UrlShortener urlShortener) {
-        Optional<UrlShortener> urlOptional = urlRepo.findByOriginalUrl(urlShortener.getOriginalUrl());
-        if(urlOptional.isPresent()) {
-            throw new IllegalStateException("Shortened Url Exists Already");
-        }
+    public UrlResponse addNew(UrlRequest request) {
+        urlRepo.findByOriginalUrl(request.getOriginalUrl())
+           .ifPresent(u -> { throw new IllegalStateException("Exists already"); });
 
-        urlRepo.save(urlShortener);
-        Long id = urlShortener.getId();
-        String shortCode = Base62Util.encode(id);
-        urlShortener.setShortCode(shortCode);
-        urlRepo.save(urlShortener);
+        UrlShortener url = new UrlShortener();
+        url.setOriginalUrl(request.getOriginalUrl());
+
+        urlRepo.save(url);
+        String shortCode = Base62Util.encode(url.getId());
+        url.setShortCode(shortCode);
+        urlRepo.save(url);
         
+        return new UrlResponse(url.getShortCode(), url.getOriginalUrl());
     }
 
-    public List<UrlShortener> displayOutput() {
-        return urlRepo.findAll();
+    public List<UrlResponse> displayOutput() {
+        return urlRepo.findAll()
+            .stream()
+            .map(url -> new UrlResponse(url.getShortCode(), url.getOriginalUrl()))
+            .toList();
     }
 }

@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 import com.darklord.url_shortener.service.UrlService;
-import com.darklord.url_shortener.model.UrlShortener;
+import com.darklord.url_shortener.dto.UrlRequest;
+import com.darklord.url_shortener.dto.UrlResponse;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,8 +32,7 @@ public class UrlController {
     }
 
     @GetMapping 
-    public List<UrlShortener> display() {
-        System.out.println("DISPLAY ENDPOINT HIT");
+    public List<UrlResponse> display() {
         return urlService.displayOutput();
     }
 
@@ -45,8 +47,9 @@ public class UrlController {
     }
 
     @PostMapping
-    public void addNewUrl(@RequestBody UrlShortener urlShortener) {
-        urlService.addNew(urlShortener);
+    public ResponseEntity<UrlResponse> addNewUrl(@Valid @RequestBody UrlRequest request) {
+        UrlResponse response = urlService.addNew(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 }
