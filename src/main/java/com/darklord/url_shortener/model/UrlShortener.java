@@ -1,4 +1,4 @@
-package com.darklord.url_shortener.url;
+package com.darklord.url_shortener.model;
 
 
 import jakarta.persistence.Entity;

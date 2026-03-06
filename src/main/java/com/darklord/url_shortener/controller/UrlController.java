@@ -1,4 +1,4 @@
-package com.darklord.url_shortener.url;
+package com.darklord.url_shortener.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -9,6 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.darklord.url_shortener.service.UrlService;
+import com.darklord.url_shortener.model.UrlShortener;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +28,6 @@ public class UrlController {
         this.urlService = urlService;
     }
 
-    
     @GetMapping 
     public List<UrlShortener> display() {
         System.out.println("DISPLAY ENDPOINT HIT");
