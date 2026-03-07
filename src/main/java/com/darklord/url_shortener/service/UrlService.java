@@ -30,17 +30,30 @@ public class UrlService {
 
     public UrlResponse addNew(UrlRequest request) {
         urlRepo.findByOriginalUrl(request.getOriginalUrl())
-           .ifPresent(u -> { throw new IllegalStateException("Exists already"); });
+           .ifPresent(u -> { 
+            throw new IllegalStateException("Exists already"); 
+        });
 
         UrlShortener url = new UrlShortener();
         url.setOriginalUrl(request.getOriginalUrl());
-
-        urlRepo.save(url);
-        String shortCode = Base62Util.encode(url.getId());
-        url.setShortCode(shortCode);
-        urlRepo.save(url);
         
+        if(request.getCustomAlias() != null && !request.getCustomAlias().isBlank()) {
+
+            if(urlRepo.findByShortCode(request.getCustomAlias()).isPresent()) {
+                throw new IllegalStateException("Custom alias already exists !! ");
+            }
+
+            url.setShortCode(request.getCustomAlias());
+            urlRepo.save(url);
+        }
+        else {
+            urlRepo.save(url);
+            String shortCode = Base62Util.encode(url.getId());
+            url.setShortCode(shortCode);
+            urlRepo.save(url);
+        }
         return new UrlResponse(url.getShortCode(), url.getOriginalUrl());
+
     }
 
     public List<UrlResponse> displayOutput() {
