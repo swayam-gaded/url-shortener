@@ -4,6 +4,7 @@ Cleaned the file hierarchy and added the necessary directories(empty) into it.
 - ### Logic Upgrade : <br>
 Removed the old shortCodeGenerator which used .random() and added the Base62 encoding. This allowed for unique shortCodes to be generated. 
 - ### DTO Introduction : <br>
+- ### Global Exception Handler : <br>
 
 
 
@@ -34,6 +35,13 @@ DTO Mapping ensures that the "Database shape" of your data never leaves the Serv
 In addNewUrl method of UrlController : @RequestBody: Maps incoming JSON $\rightarrow$ Java Object. <br>
 ResponseEntity: The "Full Envelope" (Data + Status + Headers). <br>
 HttpStatus.CREATED: The specific HTTP "Success" code for new data. <br>
+
+- ### About exception handler : <br>
+@RestControllerAdvice is a meta annotation made up of ControllerAdvice and ResponseBody and this applies to all every single controller in the project <br>
+Usually when an exception is thrown, the controller crashes out and Spring sends a default white label error but with the RestControllerAdvice we can check if there is a way to explain this error explicitly<br> 
+The ResponseEntity is a container. The Map is the content (JSON), and the Status is the metadata (HTTP header). They are two different parts of one single response sent back to the user<br>
+The MethodArgumentNotValidException checks for all possible not valid errors and the details for this is found in the folder called FieldErrors under BindingResult and these particular errors are binded to the body <br> 
+
 
 ## Some extra points found from mcqs asked by Gemini (19/20 Correct so doing not bad) 7/6/26
 - Jackson is the default Spring Library which uses to map JSON data to POJOs and vice versa. This is related to the @RequestBody annotation. 

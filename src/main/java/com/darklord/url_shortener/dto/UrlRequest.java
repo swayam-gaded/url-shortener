@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Size;
 
 public class UrlRequest {
     
-    @URL
-    @NotBlank
+    @URL(message="Give a valid URL")
+    @NotBlank(message="You forgot to give URL")
     private String originalUrl;
     @Size(min=3, max=10, message="The size must be between 3 and 10.")
     private String customAlias;
