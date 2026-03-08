@@ -1,6 +1,7 @@
 package com.darklord.url_shortener.model;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -23,6 +24,7 @@ public class UrlShortener {
         generator = "url_sequence"
     )
     private Long id;
+    @Column(nullable = false, unique = true)
     private String shortCode;
     private String originalUrl;
     private String customAlias;

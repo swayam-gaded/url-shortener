@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+
 import com.darklord.url_shortener.repository.UrlRepo;
 import com.darklord.url_shortener.dto.UrlRequest;
 import com.darklord.url_shortener.dto.UrlResponse;
@@ -25,13 +28,14 @@ public class UrlService {
     public String getOriginalUrl(String shortCode) {
         return urlRepo.findByShortCode(shortCode)
             .map(UrlShortener::getOriginalUrl)
-            .orElseThrow(() -> new RuntimeException("URL not found for code: " + shortCode));
+            .orElseThrow(() -> new EntityNotFoundException("URL not found for code: " + shortCode));
     }
 
+    @Transactional
     public UrlResponse addNew(UrlRequest request) {
         urlRepo.findByOriginalUrl(request.getOriginalUrl())
            .ifPresent(u -> { 
-            throw new IllegalStateException("Exists already"); 
+            throw new IllegalStateException("The shortURL for your given URL exists already"); 
         });
 
         UrlShortener url = new UrlShortener();
