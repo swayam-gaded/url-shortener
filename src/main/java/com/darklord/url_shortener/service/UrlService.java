@@ -11,7 +11,7 @@ import jakarta.transaction.Transactional;
 import com.darklord.url_shortener.repository.UrlRepo;
 import com.darklord.url_shortener.dto.UrlRequest;
 import com.darklord.url_shortener.dto.UrlResponse;
-import com.darklord.url_shortener.model.UrlShortener;
+import com.darklord.url_shortener.model.UrlEntity;
 import com.darklord.url_shortener.util.Base62Util;
 
 
@@ -27,7 +27,7 @@ public class UrlService {
 
     public String getOriginalUrl(String shortCode) {
         return urlRepo.findByShortCode(shortCode)
-            .map(UrlShortener::getOriginalUrl)
+            .map(UrlEntity::getOriginalUrl)
             .orElseThrow(() -> new EntityNotFoundException("URL not found for code: " + shortCode));
     }
 
@@ -38,7 +38,7 @@ public class UrlService {
             throw new IllegalStateException("The shortURL for your given URL exists already"); 
         });
 
-        UrlShortener url = new UrlShortener();
+        UrlEntity url = new UrlEntity();
         url.setOriginalUrl(request.getOriginalUrl());
         
         if(request.getCustomAlias() != null && !request.getCustomAlias().isBlank()) {
