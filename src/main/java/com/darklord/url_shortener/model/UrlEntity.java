@@ -1,12 +1,7 @@
 package com.darklord.url_shortener.model;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,7 +16,12 @@ import java.time.LocalDateTime;
 public class UrlEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "url_gen")
+    @SequenceGenerator(
+            name = "url_gen",
+            sequenceName = "url_sequence", // should match the SQL sequence name in the db exactly
+            allocationSize = 1             // tells Hibernate to increment by 1
+    )
     private Long id;
 
     @Column(nullable = false, unique = true)

@@ -12,17 +12,19 @@ import com.darklord.url_shortener.repository.UrlRepo;
 import com.darklord.url_shortener.dto.UrlRequest;
 import com.darklord.url_shortener.dto.UrlResponse;
 import com.darklord.url_shortener.model.UrlEntity;
-import com.darklord.url_shortener.util.Base62Util;
+import com.darklord.url_shortener.util.HashidUtil;
 
 
 @Service
 public class UrlService {
 
     private final UrlRepo urlRepo;
+    private final HashidUtil hashidUtil;
 
     @Autowired
-    public UrlService(UrlRepo urlRepo) {
+    public UrlService(UrlRepo urlRepo, HashidUtil hashidUtil) {
         this.urlRepo = urlRepo;
+        this.hashidUtil = hashidUtil;
     }
 
     public String getOriginalUrl(String shortCode) {
@@ -31,28 +33,41 @@ public class UrlService {
             .orElseThrow(() -> new EntityNotFoundException("URL not found for code: " + shortCode));
     }
 
-    @Transactional
-    public UrlResponse addNew(UrlRequest request) {
+    public UrlEntity checkForDuplicateOgUrl(UrlRequest request) {
         urlRepo.findByOriginalUrl(request.getOriginalUrl())
-           .ifPresent(u -> { 
-            throw new IllegalStateException("The shortURL for your given URL exists already"); 
-        });
+                .ifPresent(u -> {
+                    throw new IllegalStateException("The shortURL for your given URL exists already");
+                });
 
         UrlEntity url = new UrlEntity();
         url.setOriginalUrl(request.getOriginalUrl());
-        
-        if(request.getCustomAlias() != null && !request.getCustomAlias().isBlank()) {
+        return url;
+    }
 
+    public boolean checkForCustomAlias(UrlRequest request) {
+        if(request.getCustomAlias() != null && !request.getCustomAlias().isBlank()) {
             if(urlRepo.findByShortCode(request.getCustomAlias()).isPresent()) {
                 throw new IllegalStateException("Custom alias already exists !! ");
             }
+            else {
+                return true;
+            }
+        }
+        else { return false; }
+    }
 
+    @Transactional
+    public UrlResponse addNew(UrlRequest request) {
+
+        UrlEntity url = checkForDuplicateOgUrl(request);
+
+        if(checkForCustomAlias(request)) {
             url.setShortCode(request.getCustomAlias());
             urlRepo.save(url);
         }
         else {
-            urlRepo.save(url);
-            String shortCode = Base62Util.encode(url.getId());
+            Long nextId = urlRepo.getNextSequenceValue();
+            String shortCode = hashidUtil.encode(nextId);
             url.setShortCode(shortCode);
             urlRepo.save(url);
         }
