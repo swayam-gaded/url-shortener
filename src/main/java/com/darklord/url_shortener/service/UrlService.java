@@ -2,6 +2,7 @@ package com.darklord.url_shortener.service;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +17,11 @@ import com.darklord.url_shortener.util.HashidUtil;
 
 
 @Service
+@RequiredArgsConstructor
 public class UrlService {
 
     private final UrlRepo urlRepo;
     private final HashidUtil hashidUtil;
-
-    @Autowired
-    public UrlService(UrlRepo urlRepo, HashidUtil hashidUtil) {
-        this.urlRepo = urlRepo;
-        this.hashidUtil = hashidUtil;
-    }
 
     public String getOriginalUrl(String shortCode) {
         return urlRepo.findByShortCode(shortCode)
