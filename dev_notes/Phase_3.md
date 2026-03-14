@@ -1,8 +1,8 @@
 ## Overall Changes 
-- ### Moved to hashid from base62 encoding 
-- ### Changed the sequence generator using GeneratedValue,Query and Sequence Generator
-- ### Removed the command line runner and switched to Intellij's method of sending HTTP requests
-- ### Used JPA Auditing to fill the createdAt column in table 
+- **Moved to hashid from base62 encoding**
+- **Changed the sequence generator using GeneratedValue,Query and Sequence Generator**
+- **Removed the command line runner and switched to Intellij's method of sending HTTP requests**
+- **Used JPA Auditing to fill the createdAt column in table** 
 ---
 ### 1. Base62 &rarr; HashId
 Initially had thought of implementing both but was struck down when i realised both required `long` input and gave out `string` output <br>
@@ -30,3 +30,13 @@ SequenceGenerator is the configuration and allocationSize refers to the number o
 The above two work hand in hand with the PostgreSQL command typed which is actual command to start the sequence<br>
 Query is just a hibernate annotation used to specify that the particular data member will gets it value from the native PostgreSQL command specified in the value parameter <br>
 ---
+### 3. JPA Auditing 
+The annnotations used were 
+- @EnableJpaAuditing
+- @EntityListener(AuditingEntityListener.class)
+- @CreatedDate 
+<br>
+Jpa by default does not save any metadata regarding each and every entity but with the EnableJpaAuditing, it tells Spring to scan the context for metadata and create a corresponding pojo <br>
+EntityListener(AuditingEntityListener.clas) is the observer which is a part of JPA specification and tells hibernate to notify the AuditingEntityListener before making any db operation<br>
+CreatedDate specifies that the data member it has annotated must be filled with the timestamp of creation<br>
+All of the notifications and injection of data member happens before the SQL Insert command takes place <br> 
