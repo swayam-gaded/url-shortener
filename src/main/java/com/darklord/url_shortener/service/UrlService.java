@@ -3,7 +3,6 @@ package com.darklord.url_shortener.service;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -23,7 +22,9 @@ public class UrlService {
     private final UrlRepo urlRepo;
     private final HashidUtil hashidUtil;
 
-    public String getOriginalUrl(String shortCode) {
+    public String getOriginalUrlAndIncrementCount(String shortCode) {
+        urlRepo.incrementCount(shortCode);
+
         return urlRepo.findByShortCode(shortCode)
             .map(UrlEntity::getOriginalUrl)
             .orElseThrow(() -> new EntityNotFoundException("URL not found for code: " + shortCode));

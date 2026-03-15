@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,11 @@ public class UrlEntity {
     @CreatedDate
     @Column(nullable = false,updatable = false)
     private LocalDateTime createdAt;
+
+    private Integer clicks = 0;
+
+    @LastModifiedDate
+    private LocalDateTime lastUsedAt;
 
     public UrlEntity(String originalUrl) {
         this.originalUrl = originalUrl;
