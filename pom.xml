@@ -62,6 +62,10 @@
 			<artifactId>hashids</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
