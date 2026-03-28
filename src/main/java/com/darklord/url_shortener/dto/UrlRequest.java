@@ -1,5 +1,6 @@
 package com.darklord.url_shortener.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import jakarta.validation.constraints.Size;
 
 @Getter
 @Setter
+@Schema
 @RequiredArgsConstructor
 public class UrlRequest {
     

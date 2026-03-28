@@ -3,6 +3,8 @@ package com.darklord.url_shortener.controller;
 import java.net.URI;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping(path="api/v1/url")
-public class UrlController {
+public class UrlController implements UrlApi{
 
     private final UrlService urlService;
 
