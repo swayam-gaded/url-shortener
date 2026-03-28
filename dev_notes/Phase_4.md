@@ -34,6 +34,8 @@ the `anyRequest().authenticated()` is used for securing any other url not mentio
 the `http.build()` is the one constructing the SecurityChainFilter object that Spring uses. basically you are configuring the blueprint of the security<br>
 `csrf.disable()` is done because CSRF(Cross Site Request Forgery) requires a unique token to be sent with every POST request which goes against the stateless feature of REST APIs<br>
 in the passwords method we have `{noop}` which stands for **No Operation** which tells the spring to use the password as plain text. Usually password requires an ecnrypted password <br>
+`{noop}` has been taken down and a bcrypt encoder is being used to encode the password <br>
+Also there is an additional security for checking whether the client accessing the view all get endpoint has the Admin role using a PreAuthorize annotation on the endpoint in the controller layer <br>
 ---
 **UserDetailsService** <br>
 UserDetailsService is an interface with only one method (loadUserByUsername) which acts as the search engine for Spring security and here it mainly is used to check the in memory list of users i have made (only admin for now)<br>
